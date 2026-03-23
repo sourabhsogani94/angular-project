@@ -1,0 +1,36 @@
+<div class="form-container">
+  <div class="form-card">
+    <h2>Signup</h2>
+
+    <form [formGroup]="signupForm" (ngSubmit)="signup()">
+
+      <input type="text" placeholder="Name" formControlName="name">
+      <div class="error" *ngIf="signupForm.get('name')?.touched && signupForm.get('name')?.invalid">
+        Name is required
+      </div>
+
+      <input type="email" placeholder="Email" formControlName="email">
+      <div class="error" *ngIf="signupForm.get('email')?.touched && signupForm.get('email')?.invalid">
+        Enter valid email
+      </div>
+
+      <input type="password" placeholder="Password" formControlName="password">
+      <div class="error" *ngIf="signupForm.get('password')?.touched && signupForm.get('password')?.invalid">
+        Password must be at least 6 characters
+      </div>
+
+      <button type="submit" [disabled]="loading">
+        {{ loading ? 'Signing up...' : 'Signup' }}
+      </button>
+
+    </form>
+
+    <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+    <p class="link-text">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </p>
+  </div>
+</div>
