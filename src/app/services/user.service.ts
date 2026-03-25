@@ -19,11 +19,9 @@ baseUrl = environment.apiUrl;
     return this.http.post(`${this.baseUrl}/login`, data);
   }
 
-  getUsers(): Observable<any> {
-console.log('API URL:', this.baseUrl);
-    return this.http.get(`${this.baseUrl}/users`);
-  }
-
+getUsers(page: number, search: string) {
+  return this.http.get(`${this.baseUrl}/users?page=${page}&limit=5&search=${search}`);
+}
   getProfile(): Observable<any> {
     return this.http.get(`${this.baseUrl}/profile`);
   }
@@ -32,5 +30,12 @@ console.log('API URL:', this.baseUrl);
 }
 changePassword(data: any): Observable<any> {
   return this.http.post(`${this.baseUrl}/change-password`, data);
+}
+deleteUser(id: string) {
+  return this.http.delete(`${this.baseUrl}/user/${id}`);
+}
+// ================= CREATE USER (ADMIN ONLY) =================
+createUser(data: any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/user`, data);
 }
 }

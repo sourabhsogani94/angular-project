@@ -4,11 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatCardModule, MatButtonModule, MatInputModule, MatTableModule, MatFormFieldModule, MatSelectModule],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.scss']
 })
@@ -16,6 +22,7 @@ export class DashboardComponent implements OnInit {
 
   users: any[] = [];
   profile: any = null;
+  userRole: string = '';
 
   editData = {
     name: '',
@@ -26,12 +33,22 @@ export class DashboardComponent implements OnInit {
     oldPassword: '',
     newPassword: ''
   };
+  newUser = {
+  name: '',
+  email: '',
+  password: '',
+  role: 'user'
+};
+
+loadingCreate = false;
 
   loadingUsers = false;
   loadingProfile = false;
   loadingUpdate = false;
   loadingPassword = false;
-
+currentPage = 1;
+totalPages = 1;
+searchText = '';
   errorMessage = '';
   successMessage = '';
 
@@ -61,6 +78,7 @@ getProfile() {
       if (res) {
         this.editData.name = res.name;
         this.editData.email = res.email;
+        this.userRole = res.role || '';
       }
 
       this.loadingProfile = false;
@@ -77,24 +95,42 @@ getProfile() {
   // ================= GET USERS =================
 getUsers() {
   this.loadingUsers = true;
-  this.clearMessages();
 
-  this.userService.getUsers().subscribe({
-    next: (res) => {
-      console.log('USERS RESPONSE:', res); // 👈 ADD
+  this.userService.getUsers(this.currentPage, this.searchText).subscribe({
+    next: (res: any) => {
+      console.log('USERS RESPONSE:', res);
 
-      this.users = res || []; // 👈 SAFE FIX
+      this.users = res.users || [];
+      this.totalPages = res.totalPages;
+
       this.loadingUsers = false;
-      this.cdr.detectChanges(); // 👈 ADD THIS
+      this.cdr.detectChanges();
     },
     error: (err) => {
-      console.log('USERS ERROR:', err); // 👈 ADD
+      console.log(err);
       this.loadingUsers = false;
       this.errorMessage = 'Failed to load users';
     }
   });
 }
+onSearch() {
+  this.currentPage = 1;
+  this.getUsers();
+}
 
+nextPage() {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+    this.getUsers();
+  }
+}
+
+prevPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+    this.getUsers();
+  }
+}
   // ================= UPDATE PROFILE =================
   updateProfile() {
     this.loadingUpdate = true;
@@ -146,4 +182,49 @@ getUsers() {
     this.errorMessage = '';
     this.successMessage = '';
   }
+  deleteUser(id: string) {
+  if (!confirm('Are you sure you want to delete this user?')) {
+    return;
+  }
+
+  this.userService.deleteUser(id).subscribe({
+    next: () => {
+      this.successMessage = 'User deleted successfully';
+
+      // 🔥 Refresh list
+      this.getUsers();
+    },
+    error: (err) => {
+      console.log(err);
+      this.errorMessage = 'Failed to delete user';
+    }
+  });
+}
+createUser() {
+  this.loadingCreate = true;
+  this.clearMessages();
+
+  this.userService.createUser(this.newUser).subscribe({
+    next: () => {
+      this.successMessage = 'User created successfully';
+      this.loadingCreate = false;
+
+      // reset form
+      this.newUser = {
+        name: '',
+        email: '',
+        password: '',
+        role: 'user'
+      };
+
+      // refresh list
+      this.getUsers();
+    },
+    error: (err) => {
+      console.log(err);
+      this.loadingCreate = false;
+      this.errorMessage = 'Failed to create user';
+    }
+  });
+}
 }
