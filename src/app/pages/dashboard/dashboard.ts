@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 
@@ -36,7 +37,9 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
+
   ) {}
 
   ngOnInit(): void {
@@ -45,40 +48,52 @@ export class DashboardComponent implements OnInit {
   }
 
   // ================= GET PROFILE =================
-  getProfile() {
-    this.loadingProfile = true;
-    this.clearMessages();
+getProfile() {
+  this.loadingProfile = true;
+  this.clearMessages();
 
-    this.userService.getProfile().subscribe({
-      next: (res) => {
-        this.profile = res;
+  this.userService.getProfile().subscribe({
+    next: (res) => {
+      console.log('PROFILE RESPONSE:', res); // 👈 ADD THIS
+
+      this.profile = res;
+
+      if (res) {
         this.editData.name = res.name;
         this.editData.email = res.email;
-        this.loadingProfile = false;
-      },
-      error: () => {
-        this.loadingProfile = false;
-        this.errorMessage = 'Failed to load profile';
       }
-    });
-  }
+
+      this.loadingProfile = false;
+      this.cdr.detectChanges(); // 👈 ADD THIS
+    },
+    error: (err) => {
+      console.log('PROFILE ERROR:', err); // 👈 ADD THIS
+      this.loadingProfile = false;
+      this.errorMessage = 'Failed to load profile';
+    }
+  });
+}
 
   // ================= GET USERS =================
-  getUsers() {
-    this.loadingUsers = true;
-    this.clearMessages();
+getUsers() {
+  this.loadingUsers = true;
+  this.clearMessages();
 
-    this.userService.getUsers().subscribe({
-      next: (res) => {
-        this.users = res;
-        this.loadingUsers = false;
-      },
-      error: () => {
-        this.loadingUsers = false;
-        this.errorMessage = 'Failed to load users';
-      }
-    });
-  }
+  this.userService.getUsers().subscribe({
+    next: (res) => {
+      console.log('USERS RESPONSE:', res); // 👈 ADD
+
+      this.users = res || []; // 👈 SAFE FIX
+      this.loadingUsers = false;
+      this.cdr.detectChanges(); // 👈 ADD THIS
+    },
+    error: (err) => {
+      console.log('USERS ERROR:', err); // 👈 ADD
+      this.loadingUsers = false;
+      this.errorMessage = 'Failed to load users';
+    }
+  });
+}
 
   // ================= UPDATE PROFILE =================
   updateProfile() {

@@ -21,10 +21,10 @@
 
     <p *ngIf="loadingProfile">Loading profile...</p>
 
-    <div *ngIf="profile">
-      <p><strong>Name:</strong> {{ profile.name }}</p>
-      <p><strong>Email:</strong> {{ profile.email }}</p>
-    </div>
+  <div *ngIf="profile && !loadingProfile">
+  <p><strong>Name:</strong> {{ profile.name }}</p>
+  <p><strong>Email:</strong> {{ profile.email }}</p>
+</div>
   </div>
 
   <!-- EDIT PROFILE -->
@@ -52,17 +52,29 @@
   </div>
 
   <!-- USERS -->
-  <div class="card">
-    <h3>User List</h3>
+<div class="card">
+  <h3>User List</h3>
 
-    <p *ngIf="loadingUsers">Loading users...</p>
-    <p>Total users: {{ users.length }}</p>
+  <p *ngIf="loadingUsers">Loading users...</p>
 
-    <ul>
-      <li *ngFor="let user of users">
-        {{ user.name || 'No Name' }} - {{ user.email || 'No Email' }}
-      </li>
-    </ul>
-  </div>
+<table *ngIf="users && users.length > 0">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.name || 'No Name' }}</td>
+        <td>{{ user.email || 'No Email' }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!loadingUsers && users.length === 0">
+  No users found
+</p>
+</div>
 
 </div>

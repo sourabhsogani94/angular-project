@@ -20,6 +20,7 @@ baseUrl = environment.apiUrl;
   }
 
   getUsers(): Observable<any> {
+console.log('API URL:', this.baseUrl);
     return this.http.get(`${this.baseUrl}/users`);
   }
 
