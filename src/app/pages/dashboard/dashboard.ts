@@ -16,10 +16,12 @@ export class DashboardComponent implements OnInit {
   profile: any = null;
   userRole: string = localStorage.getItem('role') || '';
   loadingProfile = false;
+  isDark = localStorage.getItem('darkMode') === 'true';
 
   constructor(private userService: UserService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.applyTheme();
     this.getProfile();
   }
 
@@ -56,5 +58,19 @@ export class DashboardComponent implements OnInit {
         alert('Failed to make admin');
       }
     });
+  }
+
+  toggleTheme() {
+    this.isDark = !this.isDark;
+    localStorage.setItem('darkMode', String(this.isDark));
+    this.applyTheme();
+  }
+
+  applyTheme() {
+    if (this.isDark) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
   }
 }

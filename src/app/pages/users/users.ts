@@ -20,6 +20,7 @@ import { UserService } from '../../services/user.service';
 export class Users implements OnInit {
   users: any[] = [];
   userRole: string = '';
+  isDark = localStorage.getItem('darkMode') === 'true';
 
   newUser = { name: '', email: '', password: '', role: 'user' };
 
@@ -36,6 +37,7 @@ export class Users implements OnInit {
   constructor(private userService: UserService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.applyTheme();
     this.loadRole();
     this.getUsers();
   }
@@ -131,5 +133,19 @@ export class Users implements OnInit {
   clearMessages() {
     this.errorMessage = '';
     this.successMessage = '';
+  }
+
+  toggleTheme() {
+    this.isDark = !this.isDark;
+    localStorage.setItem('darkMode', String(this.isDark));
+    this.applyTheme();
+  }
+
+  applyTheme() {
+    if (this.isDark) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
   }
 }

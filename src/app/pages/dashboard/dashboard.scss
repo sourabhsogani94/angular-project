@@ -5,25 +5,29 @@
 
 .sidebar {
   width: 220px;
-  background: #2c3e50;
+  background: #1a1a2e;
   color: white;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
 
-  h2 { margin-bottom: 20px; }
+  h2 { margin-bottom: 20px; font-size: 1.4rem; }
 
   ul {
     list-style: none;
     padding: 0;
+    flex: 1;
   }
 
   li {
-    margin: 10px 0;
-    padding: 8px 12px;
-    border-radius: 6px;
+    margin: 6px 0;
+    padding: 10px 14px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background 0.2s;
 
-    &:hover { background: rgba(255,255,255,0.1); }
-    &.active { background: rgba(255,255,255,0.2); font-weight: bold; }
+    &:hover { background: rgba(255,255,255,0.08); }
+    &.active { background: rgba(255,255,255,0.15); font-weight: bold; }
   }
 }
 
@@ -34,11 +38,12 @@
 }
 
 .topbar {
-  background: #ecf0f1;
+  background: #f8f9fa;
   padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .content {
@@ -68,3 +73,24 @@ mat-card {
 
 .error-message { color: red; margin-bottom: 10px; }
 .success-message { color: green; margin-bottom: 10px; }
+
+.theme-toggle {
+  margin-top: auto;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  background: rgba(255,255,255,0.08);
+  transition: background 0.2s;
+  font-size: 0.9rem;
+
+  &:hover { background: rgba(255,255,255,0.15); }
+}
+
+// ===== DARK MODE =====
+:host-context(body.dark-mode) {
+  .main { background: #121212; color: #e0e0e0; }
+  .topbar { background: #1e1e1e; border-bottom-color: #333; color: #e0e0e0; }
+  .content { background: #121212; }
+  mat-card { background: #1e1e1e !important; color: #e0e0e0 !important; }
+}

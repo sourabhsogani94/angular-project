@@ -7,6 +7,9 @@
       <li routerLink="/users" class="active">Users</li>
       <li routerLink="/profile">Profile</li>
     </ul>
+    <div class="theme-toggle" (click)="toggleTheme()">
+      {{ isDark ? '☀️ Light Mode' : '🌙 Dark Mode' }}
+    </div>
   </div>
 
   <!-- MAIN -->
