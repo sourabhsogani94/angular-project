@@ -1,149 +1,44 @@
-<div class="dashboard-container">
-<div *ngIf="loadingUsers || loadingProfile" class="loader">
-  Loading...
-</div>
-  <!-- TOP BAR -->
-  <div class="top-bar">
-    <h2>Dashboard</h2>
-    <button class="logout-btn" (click)="logout()">Logout</button>
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>My App</h2>
+    <ul>
+      <li routerLink="/dashboard" class="active">Dashboard</li>
+      <li *ngIf="userRole === 'admin'" routerLink="/users">Users</li>
+      <li routerLink="/profile">Profile</li>
+    </ul>
   </div>
 
-  <!-- MESSAGES -->
-  <p *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </p>
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <h2>Dashboard</h2>
+      <button mat-raised-button color="warn" (click)="logout()">Logout</button>
+    </div>
 
-  <p *ngIf="successMessage" class="success-message">
-    {{ successMessage }}
-  </p>
+    <div class="content">
+      <div *ngIf="loadingProfile">Loading...</div>
 
-  <!-- PROFILE -->
- <mat-card>
-  <h3>My Profile</h3>
-
-  <p *ngIf="loadingProfile">Loading...</p>
-
-  <div *ngIf="profile">
-    <p><strong>Name:</strong> {{ profile.name }}</p>
-    <p><strong>Email:</strong> {{ profile.email }}</p>
-  </div>
-</mat-card>
-
-  <!-- EDIT PROFILE -->
-<mat-card>
-  <h3>Edit Profile</h3>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Name</mat-label>
-    <input matInput [(ngModel)]="editData.name">
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Email</mat-label>
-    <input matInput [(ngModel)]="editData.email">
-  </mat-form-field>
-
-  <button mat-raised-button color="primary" (click)="updateProfile()">
-    Update Profile
-  </button>
-</mat-card>
-
-  <!-- CHANGE PASSWORD -->
-<mat-card>
-  <h3>Change Password</h3>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Old Password</mat-label>
-    <input matInput type="password" [(ngModel)]="passwordData.oldPassword">
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>New Password</mat-label>
-    <input matInput type="password" [(ngModel)]="passwordData.newPassword">
-  </mat-form-field>
-
-  <button mat-raised-button color="accent" (click)="changePassword()">
-    Change Password
-  </button>
-</mat-card>
-<div class="card" *ngIf="userRole === 'admin'">
-  <h3>Create User</h3>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Name</mat-label>
-    <input matInput [(ngModel)]="newUser.name" placeholder="Enter name">
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Email</mat-label>
-    <input matInput [(ngModel)]="newUser.email" placeholder="Enter email">
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Password</mat-label>
-    <input matInput type="password" [(ngModel)]="newUser.password" placeholder="Enter password">
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Role</mat-label>
-    <mat-select [(ngModel)]="newUser.role">
-      <mat-option value="user">User</mat-option>
-      <mat-option value="admin">Admin</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <button mat-raised-button color="primary" (click)="createUser()" [disabled]="loadingCreate">
-    {{ loadingCreate ? 'Creating...' : 'Create User' }}
-  </button>
-</div>
-<mat-form-field appearance="outline" class="full-width">
-  <mat-label>Search Users</mat-label>
-  <input matInput type="text" [(ngModel)]="searchText" placeholder="Search users..." (input)="onSearch()">
-</mat-form-field>
-  <!-- USERS -->
-<div class="card">
-  <h3>User List</h3>
-
-  <p *ngIf="loadingUsers">Loading users...</p>
-
-<table *ngIf="users && users.length > 0">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th *ngIf="userRole === 'admin'">Action</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let user of users">
-      <td>{{ user.name || 'No Name' }}</td>
-      <td>{{ user.email || 'No Email' }}</td>
-
-      <td *ngIf="userRole === 'admin'">
-        <button class="delete-btn" (click)="deleteUser(user._id)">
-          Delete
+      <mat-card *ngIf="profile">
+        <h3>Welcome, {{ profile.name }}!</h3>
+        <p><strong>Email:</strong> {{ profile.email }}</p>
+        <p><strong>Role:</strong> {{ profile.role }}</p>
+        <button *ngIf="userRole !== 'admin'" mat-raised-button color="accent" (click)="makeAdmin()">
+          Make me Admin
         </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<div class="pagination" *ngIf="userRole === 'admin'">
+      </mat-card>
 
-  <button (click)="prevPage()" [disabled]="currentPage === 1">
-    Prev
-  </button>
+      <div class="quick-links">
+        <mat-card routerLink="/profile" class="link-card">
+          <h3>My Profile</h3>
+          <p>View and edit your profile, change password</p>
+        </mat-card>
 
-  <span>Page {{ currentPage }} of {{ totalPages }}</span>
-
-  <button (click)="nextPage()" [disabled]="currentPage === totalPages">
-    Next
-  </button>
-
-</div>
-  <p *ngIf="!loadingUsers && users.length === 0">
-  No users found
-</p>
-</div>
-
+        <mat-card *ngIf="userRole === 'admin'" routerLink="/users" class="link-card">
+          <h3>Manage Users</h3>
+          <p>Create, search, and delete users</p>
+        </mat-card>
+      </div>
+    </div>
+  </div>
 </div>

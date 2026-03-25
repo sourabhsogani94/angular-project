@@ -41,6 +41,7 @@ export class LoginComponent {
     this.userService.login(this.loginForm.value).subscribe({
       next: (res) => {
         localStorage.setItem('token', res.token);
+        localStorage.setItem('role', res.role || '');
         this.loading = false;
         this.router.navigate(['/dashboard']);
       },

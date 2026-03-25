@@ -1,0 +1,67 @@
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h2>My App</h2>
+    <ul>
+      <li routerLink="/dashboard">Dashboard</li>
+      <li *ngIf="userRole === 'admin'" routerLink="/users">Users</li>
+      <li routerLink="/profile" class="active">Profile</li>
+    </ul>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <h2>Profile</h2>
+      <button mat-raised-button color="warn" (click)="logout()">Logout</button>
+    </div>
+
+    <div class="content">
+      <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+      <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+
+      <!-- VIEW PROFILE -->
+      <mat-card>
+        <h3>My Profile</h3>
+        <div *ngIf="loadingProfile">Loading...</div>
+        <div *ngIf="profile">
+          <p><strong>Name:</strong> {{ profile.name }}</p>
+          <p><strong>Email:</strong> {{ profile.email }}</p>
+          <p><strong>Role:</strong> {{ profile.role }}</p>
+        </div>
+      </mat-card>
+
+      <!-- EDIT PROFILE -->
+      <mat-card>
+        <h3>Edit Profile</h3>
+        <mat-form-field class="full-width">
+          <mat-label>Name</mat-label>
+          <input matInput [(ngModel)]="editData.name">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput [(ngModel)]="editData.email">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="updateProfile()" [disabled]="loadingUpdate">
+          {{ loadingUpdate ? 'Updating...' : 'Update Profile' }}
+        </button>
+      </mat-card>
+
+      <!-- CHANGE PASSWORD -->
+      <mat-card>
+        <h3>Change Password</h3>
+        <mat-form-field class="full-width">
+          <mat-label>Old Password</mat-label>
+          <input matInput type="password" [(ngModel)]="passwordData.oldPassword">
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>New Password</mat-label>
+          <input matInput type="password" [(ngModel)]="passwordData.newPassword">
+        </mat-form-field>
+        <button mat-raised-button color="accent" (click)="changePassword()" [disabled]="loadingPassword">
+          {{ loadingPassword ? 'Changing...' : 'Change Password' }}
+        </button>
+      </mat-card>
+    </div>
+  </div>
+</div>

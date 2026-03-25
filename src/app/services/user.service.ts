@@ -38,4 +38,8 @@ deleteUser(id: string) {
 createUser(data: any): Observable<any> {
   return this.http.post(`${this.baseUrl}/user`, data);
 }
+
+makeAdmin(): Observable<any> {
+  return this.http.put(`${this.baseUrl}/make-admin`, {});
+}
 }

@@ -37,3 +37,21 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+/* DARK MODE */
+.dark-mode {
+  background: #121212;
+  color: white;
+}
+
+.dark-mode .sidebar {
+  background: #1e1e1e;
+}
+
+.dark-mode .topbar {
+  background: #2c2c2c;
+}
+
+.dark-mode mat-card {
+  background: #1f1f1f;
+  color: white;
+}
