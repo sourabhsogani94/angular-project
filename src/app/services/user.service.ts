@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class UserService {
-baseUrl = 'http://localhost:3000';
+baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
