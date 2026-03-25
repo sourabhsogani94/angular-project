@@ -1,13 +1,21 @@
 <div class="dashboard-container">
+
+  <!-- TOP BAR -->
   <div class="top-bar">
     <h2>Dashboard</h2>
     <button class="logout-btn" (click)="logout()">Logout</button>
   </div>
 
+  <!-- MESSAGES -->
   <p *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
   </p>
 
+  <p *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
+  </p>
+
+  <!-- PROFILE -->
   <div class="card">
     <h3>My Profile</h3>
 
@@ -19,6 +27,31 @@
     </div>
   </div>
 
+  <!-- EDIT PROFILE -->
+  <div class="card">
+    <h3>Edit Profile</h3>
+
+    <input type="text" [(ngModel)]="editData.name" placeholder="Enter name">
+    <input type="email" [(ngModel)]="editData.email" placeholder="Enter email">
+
+    <button (click)="updateProfile()" [disabled]="loadingUpdate">
+      {{ loadingUpdate ? 'Updating...' : 'Update Profile' }}
+    </button>
+  </div>
+
+  <!-- CHANGE PASSWORD -->
+  <div class="card">
+    <h3>Change Password</h3>
+
+    <input type="password" [(ngModel)]="passwordData.oldPassword" placeholder="Old Password">
+    <input type="password" [(ngModel)]="passwordData.newPassword" placeholder="New Password">
+
+    <button (click)="changePassword()" [disabled]="loadingPassword">
+      {{ loadingPassword ? 'Updating...' : 'Change Password' }}
+    </button>
+  </div>
+
+  <!-- USERS -->
   <div class="card">
     <h3>User List</h3>
 
@@ -31,4 +64,5 @@
       </li>
     </ul>
   </div>
+
 </div>

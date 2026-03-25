@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class UserService {
-baseUrl = environment.apiUrl;
+baseUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 
@@ -26,4 +26,10 @@ baseUrl = environment.apiUrl;
   getProfile(): Observable<any> {
     return this.http.get(`${this.baseUrl}/profile`);
   }
+  updateProfile(data: any): Observable<any> {
+  return this.http.put(`${this.baseUrl}/profile`, data);
+}
+changePassword(data: any): Observable<any> {
+  return this.http.post(`${this.baseUrl}/change-password`, data);
+}
 }
